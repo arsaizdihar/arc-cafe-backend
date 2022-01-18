@@ -1,13 +1,18 @@
+import cookieParser from "cookie-parser";
+import cors from "cors";
 import express from "express";
 import config from "./config";
-import prisma from "./prisma";
+import extractJWT from "./middlewares/extractJWT";
+import routes from "./routes";
 
 const app = express();
-app.use(express.json());
 
-app.get("/api/user/count", async (req, res) => {
-  return res.json(await prisma.user.count());
-});
+app.use(cors());
+app.use(express.json());
+app.use(cookieParser());
+app.use(extractJWT);
+
+app.use("/api/auth", routes.auth);
 
 app.listen(
   config.PORT,
