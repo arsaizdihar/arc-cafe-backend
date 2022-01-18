@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 const PORT = process.env.PORT || 5000;
 
 const token = {
@@ -6,7 +9,11 @@ const token = {
   issuer: process.env.TOKEN_ISSUER || "default issuer",
 };
 
+const origin = (process.env.ORIGIN || "http://localhost").split(" ");
+
 export default {
   PORT,
   token,
+  origin,
+  DEV: process.env.NODE_ENV !== "production",
 };
