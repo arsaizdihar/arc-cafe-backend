@@ -9,7 +9,7 @@ const {
 
 router.get("/", getMenus);
 router.post("/chart", loginRequired, addToChart);
-router.delete("/chart", loginRequired, deleteFromChart);
+router.delete("/chart/:id", loginRequired, deleteFromChart);
 router.get("/chart", loginRequired, getChartMenus);
 
 export default router;

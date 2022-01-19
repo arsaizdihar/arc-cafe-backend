@@ -36,7 +36,7 @@ const addToChart: RequestHandler = async (req, res) => {
 };
 
 const deleteFromChart: RequestHandler = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
 
   if (typeof id !== "string")
     return res.status(400).json({ message: "id is required." });
