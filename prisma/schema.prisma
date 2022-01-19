@@ -11,8 +11,51 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(cuid())
-  email    String @unique
-  name     String
-  password String
+  id         String      @id @default(cuid())
+  email      String      @unique
+  name       String
+  password   String
+  orders     Order[]
+  menuOrders MenuOrder[]
+}
+
+model Menu {
+  id        String      @id @default(cuid())
+  name      String
+  photo_url String
+  type      MenuType    @default(DRINK)
+  orders    MenuOrder[]
+  price     Int
+}
+
+model MenuOrder {
+  id         String   @id @default(cuid())
+  menu       Menu     @relation(fields: [menuId], references: [id])
+  menuId     String
+  order      Order?   @relation(fields: [orderId], references: [id])
+  orderId    String?
+  customer   User     @relation(fields: [customerId], references: [id])
+  customerId String
+  createdAt  DateTime @default(now())
+}
+
+model Order {
+  id         String      @id @default(cuid())
+  customer   User        @relation(fields: [customerId], references: [id])
+  customerId String
+  paid       Boolean     @default(false)
+  paidAt     DateTime?
+  createdAt  DateTime    @default(now())
+  MenuOrder  MenuOrder[]
+}
+
+enum Size {
+  SMALL
+  MEDIUM
+  LARGE
+}
+
+enum MenuType {
+  FOOD
+  DRINK
 }

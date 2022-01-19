@@ -3,7 +3,7 @@ import cors from "cors";
 import express from "express";
 import config from "./config";
 import extractJWT from "./middlewares/extractJWT";
-import routes from "./routes";
+import router from "./routes";
 
 const app = express();
 
@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(extractJWT);
 
-app.use("/api/auth", routes.auth);
+app.use("/api", router);
 
 app.listen(
   config.PORT,
