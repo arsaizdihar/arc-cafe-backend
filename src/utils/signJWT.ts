@@ -16,7 +16,7 @@ const signJWT = (user: User, res: Response, endResponse = true) => {
     });
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
+      secure: !config.DEV,
       expires,
       sameSite: "none",
     });
