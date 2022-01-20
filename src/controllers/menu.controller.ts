@@ -7,7 +7,7 @@ const getMenus: RequestHandler = async (req, res) => {
   return res.json(menus);
 };
 
-const getChartMenus: RequestHandler = async (req, res) => {
+const getCartMenus: RequestHandler = async (req, res) => {
   const user = res.locals.user as User;
   const menus = await prisma.menuOrder.findMany({
     where: { customerId: user.id, orderId: null },
@@ -18,7 +18,7 @@ const getChartMenus: RequestHandler = async (req, res) => {
   return res.json(menus);
 };
 
-const addToChart: RequestHandler = async (req, res) => {
+const addToCart: RequestHandler = async (req, res) => {
   const { menuId } = req.body;
 
   if (typeof menuId !== "string") {
@@ -35,7 +35,7 @@ const addToChart: RequestHandler = async (req, res) => {
   }
 };
 
-const deleteFromChart: RequestHandler = async (req, res) => {
+const deleteFromCart: RequestHandler = async (req, res) => {
   const { id } = req.params;
 
   if (typeof id !== "string")
@@ -55,7 +55,7 @@ const deleteFromChart: RequestHandler = async (req, res) => {
 
 export default {
   getMenus,
-  addToChart,
-  deleteFromChart,
-  getChartMenus,
+  addToCart,
+  deleteFromCart,
+  getCartMenus,
 };

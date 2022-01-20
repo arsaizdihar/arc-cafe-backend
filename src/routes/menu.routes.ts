@@ -4,12 +4,12 @@ import loginRequired from "../middlewares/loginRequired";
 
 const router = express.Router();
 const {
-  menu: { addToChart, deleteFromChart, getMenus, getChartMenus },
+  menu: { addToCart, deleteFromCart, getMenus, getCartMenus },
 } = controllers;
 
 router.get("/", getMenus);
-router.post("/chart", loginRequired, addToChart);
-router.delete("/chart/:id", loginRequired, deleteFromChart);
-router.get("/chart", loginRequired, getChartMenus);
+router.post("/cart", loginRequired, addToCart);
+router.delete("/cart/:id", loginRequired, deleteFromCart);
+router.get("/cart", loginRequired, getCartMenus);
 
 export default router;

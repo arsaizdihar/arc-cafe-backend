@@ -46,7 +46,7 @@ model Order {
   paid       Boolean     @default(false)
   paidAt     DateTime?
   createdAt  DateTime    @default(now())
-  MenuOrder  MenuOrder[]
+  menuOrders MenuOrder[]
 }
 
 enum Size {
