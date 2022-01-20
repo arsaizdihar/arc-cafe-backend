@@ -14,6 +14,10 @@ app.use(extractJWT);
 
 app.use("/api", router);
 
+app.use((req, res) => {
+  return res.status(404).json({ message: "Not Found." });
+});
+
 app.listen(
   config.PORT,
   () => `App is running on http://localhost:${config.PORT}`
