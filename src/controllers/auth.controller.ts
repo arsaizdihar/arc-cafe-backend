@@ -1,16 +1,17 @@
 import bcryptjs from "bcryptjs";
-import { RequestHandler } from "express";
+import { Request, RequestHandler, Response } from "express";
+import { validationResult } from "express-validator";
 import prisma from "../core/prisma";
 import signJWT from "../utils/signJWT";
 
-const register: RequestHandler = async (req, res) => {
+const register = async (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.mapped() });
+  }
+
   let { email, password, name } = req.body;
 
-  if (!email || !password || !name) {
-    return res
-      .status(400)
-      .json({ error: "email, password, and name required" });
-  }
   const hash = await bcryptjs.hash(password, 10);
   prisma.user
     .create({ data: { email, name, password: hash } })
