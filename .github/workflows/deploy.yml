@@ -16,6 +16,7 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           script: |
             cd arc-cafe-backend
+            git pull
             yarn
             yarn build
             pm2 restart arc
