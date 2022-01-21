@@ -1,6 +1,8 @@
 import { User } from "@prisma/client";
 import { RequestHandler } from "express";
+import { validationResult } from "express-validator";
 import prisma from "../core/prisma";
+import fieldErrors from "../utils/fieldErrors";
 
 const getOrders: RequestHandler = async (req, res) => {
   const user = res.locals.user as User;
@@ -28,16 +30,19 @@ const checkoutOrder: RequestHandler = async (req, res) => {
   const user = res.locals.user as User;
   const { ids } = req.body;
 
-  if (!(Array.isArray(ids) && ids.every((id) => typeof id === "string"))) {
-    return res
-      .status(400)
-      .json({ message: "Ids must be an array of string id" });
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return fieldErrors(errors, res);
   }
 
   const menuOrders = await prisma.menuOrder.findMany({
     where: { id: { in: ids }, orderId: null },
     include: { menu: { select: { price: true } } },
   });
+
+  if (menuOrders.length === 0)
+    return res.status(400).json({ message: "No id is valid." });
 
   const order = await prisma.order.create({
     data: {

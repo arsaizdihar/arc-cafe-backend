@@ -2,12 +2,13 @@ import bcryptjs from "bcryptjs";
 import { Request, RequestHandler, Response } from "express";
 import { validationResult } from "express-validator";
 import prisma from "../core/prisma";
+import fieldErrors from "../utils/fieldErrors";
 import signJWT from "../utils/signJWT";
 
 const register = async (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.mapped() });
+    return fieldErrors(errors, res);
   }
 
   let { email, password, name } = req.body;
