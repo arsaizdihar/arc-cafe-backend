@@ -21,12 +21,12 @@ model User {
 }
 
 model Menu {
-  id        String      @id @default(cuid())
-  name      String
-  photo_url String
-  type      MenuType    @default(DRINK)
-  orders    MenuOrder[]
-  price     Int
+  id       String      @id @default(cuid())
+  name     String
+  photoUrl String
+  type     MenuType    @default(DRINK)
+  orders   MenuOrder[]
+  price    Int
 }
 
 model MenuOrder {

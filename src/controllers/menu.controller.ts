@@ -1,10 +1,53 @@
 import { User } from "@prisma/client";
 import { RequestHandler } from "express";
+import { validationResult } from "express-validator";
 import prisma from "../core/prisma";
+import fieldErrors from "../utils/fieldErrors";
 
 const getMenus: RequestHandler = async (req, res) => {
   const menus = await prisma.menu.findMany();
   return res.json(menus);
+};
+
+const addMenu: RequestHandler = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) return fieldErrors(errors, res);
+
+  const { name, photoUrl, type, price } = req.body;
+
+  const menu = await prisma.menu.create({
+    data: { name, photoUrl, type, price },
+  });
+
+  return res.status(201).json(menu);
+};
+
+const deleteMenu: RequestHandler = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const menu = await prisma.menu.delete({ where: { id } });
+    return res.json({ message: `menu ${menu.name} successfully deleted.` });
+  } catch (error) {
+    return res.status(404).json({ message: "menu not found." });
+  }
+};
+
+const updateMenu: RequestHandler = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) return fieldErrors(errors, res);
+  const { id } = req.params;
+  const { name, photoUrl, type, price } = req.body;
+  try {
+    const menu = await prisma.menu.update({
+      where: { id },
+      data: { name, photoUrl, type, price },
+    });
+    return res.json(menu);
+  } catch (error) {
+    return res.status(404).json({ message: "menu not found." });
+  }
 };
 
 const getCartMenus: RequestHandler = async (req, res) => {
@@ -58,4 +101,7 @@ export default {
   addToCart,
   deleteFromCart,
   getCartMenus,
+  addMenu,
+  deleteMenu,
+  updateMenu,
 };
