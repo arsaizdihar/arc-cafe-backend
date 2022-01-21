@@ -11,4 +11,8 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          script: whoami
+          script: |
+            cd arc-cafe-backend
+            yarn
+            yarn build
+            pm2 restart arc
