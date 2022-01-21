@@ -16,7 +16,10 @@ const register = async (req: Request, res: Response) => {
   const hash = await bcryptjs.hash(password, 10);
   prisma.user
     .create({ data: { email, name, password: hash } })
-    .then((user) => res.status(201).json({ ...user, password: undefined }))
+    .then((user) => {
+      signJWT(user, res, false);
+      res.status(201).json({ ...user, password: undefined });
+    })
     .catch((err) => {
       return res.status(400).json({ message: err.message, error: err });
     });
