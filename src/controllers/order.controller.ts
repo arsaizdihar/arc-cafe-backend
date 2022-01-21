@@ -6,15 +6,8 @@ const getOrders: RequestHandler = async (req, res) => {
   const user = res.locals.user as User;
   const orders = await prisma.order.findMany({
     where: { customer: user },
-    include: { menuOrders: { select: { menu: { select: { price: true } } } } },
   });
-  return res.json(
-    orders.map((order) => ({
-      ...order,
-      menuOrders: undefined,
-      price: order.menuOrders.reduce((x, y) => x + y.menu.price, 0),
-    }))
-  );
+  return res.json(orders);
 };
 
 const getOrder: RequestHandler = async (req, res) => {
@@ -22,17 +15,13 @@ const getOrder: RequestHandler = async (req, res) => {
   const user = res.locals.user as User;
   const order = await prisma.order.findFirst({
     where: { id, customer: user },
-    include: { menuOrders: { select: { menu: { select: { price: true } } } } },
+    include: { menuOrders: { include: { menu: true } } },
   });
   if (!order) {
     return res.status(404).json({ message: "Order not found." });
   }
 
-  return res.json({
-    ...order,
-    menuOrders: undefined,
-    price: order.menuOrders.reduce((x, y) => x + y.menu.price, 0),
-  });
+  return res.json(order);
 };
 
 const checkoutOrder: RequestHandler = async (req, res) => {
@@ -47,12 +36,14 @@ const checkoutOrder: RequestHandler = async (req, res) => {
 
   const menuOrders = await prisma.menuOrder.findMany({
     where: { id: { in: ids }, orderId: null },
+    include: { menu: { select: { price: true } } },
   });
 
   const order = await prisma.order.create({
     data: {
       customerId: user.id,
       menuOrders: { connect: menuOrders.map((m) => ({ id: m.id })) },
+      price: menuOrders.reduce((x, y) => x + y.menu.price, 0),
     },
   });
 

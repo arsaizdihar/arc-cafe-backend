@@ -47,6 +47,7 @@ model Order {
   paidAt     DateTime?
   createdAt  DateTime    @default(now())
   menuOrders MenuOrder[]
+  price      Int
 }
 
 enum Size {
