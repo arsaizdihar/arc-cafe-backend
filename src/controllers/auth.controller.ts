@@ -1,6 +1,7 @@
 import bcryptjs from "bcryptjs";
 import { Request, RequestHandler, Response } from "express";
 import { validationResult } from "express-validator";
+import config from "../config";
 import prisma from "../core/prisma";
 import fieldErrors from "../utils/fieldErrors";
 import signJWT from "../utils/signJWT";
@@ -53,7 +54,11 @@ const login: RequestHandler = async (req, res) => {
 };
 
 const logout: RequestHandler = (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "none",
+    secure: !config.DEV,
+  });
   return res.status(200).json({ message: "Logout successfully" });
 };
 
