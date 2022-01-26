@@ -14,10 +14,10 @@ const addMenu: RequestHandler = async (req, res) => {
 
   if (!errors.isEmpty()) return fieldErrors(errors, res);
 
-  const { name, photoUrl, type, price } = req.body;
+  const { name, photoUrl, type, price, composition } = req.body;
 
   const menu = await prisma.menu.create({
-    data: { name, photoUrl, type, price },
+    data: { name, photoUrl, type, price, composition },
   });
 
   return res.status(201).json(menu);
@@ -38,11 +38,11 @@ const updateMenu: RequestHandler = async (req, res) => {
 
   if (!errors.isEmpty()) return fieldErrors(errors, res);
   const { id } = req.params;
-  const { name, photoUrl, type, price } = req.body;
+  const { name, photoUrl, type, price, composition } = req.body;
   try {
     const menu = await prisma.menu.update({
       where: { id },
-      data: { name, photoUrl, type, price },
+      data: { name, photoUrl, type, price, composition },
     });
     return res.json(menu);
   } catch (error) {
