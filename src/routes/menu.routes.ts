@@ -29,7 +29,7 @@ router.post(
   body("type")
     .isIn(["FOOD", "DRINK"])
     .withMessage("type must be FOOD or DRINK."),
-  body("composition").isJSON(),
+  body("composition").isObject(),
   addMenu
 );
 router.delete("/:id", adminOnly, controller.deleteMenu);
@@ -43,7 +43,7 @@ router.patch(
     .optional()
     .isIn(["FOOD", "DRINK"])
     .withMessage("type must be FOOD or DRINK."),
-  body("composition").isJSON().optional(),
+  body("composition").isObject().optional(),
   controller.updateMenu
 );
 
