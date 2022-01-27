@@ -85,14 +85,15 @@ const deleteFromCart: RequestHandler = async (req, res) => {
     return res.status(400).json({ message: "id is required." });
 
   const user = res.locals.user as User;
+  const menuOrder = await prisma.menuOrder.findFirst({
+    where: { customerId: user.id, orderId: null, menuId: id },
+  });
 
-  if (
-    (await prisma.menuOrder.count({ where: { customerId: user.id, id } })) === 0
-  ) {
+  if (!menuOrder) {
     return res.status(404).json({ message: "MenuOrder not found." });
   }
 
-  await prisma.menuOrder.delete({ where: { id } });
+  await prisma.menuOrder.delete({ where: { id: menuOrder.id } });
   return res.json({ message: "Successfully deleted." });
 };
 
