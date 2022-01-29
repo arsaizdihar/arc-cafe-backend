@@ -46,5 +46,6 @@ router.patch(
   body("composition").isObject().optional(),
   controller.updateMenu
 );
+router.delete("/cart", loginRequired, controller.clearCart);
 
 export default router;

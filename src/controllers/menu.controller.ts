@@ -97,6 +97,16 @@ const deleteFromCart: RequestHandler = async (req, res) => {
   return res.json({ message: "Successfully deleted." });
 };
 
+const clearCart: RequestHandler = async (req, res) => {
+  const user = res.locals.user as User;
+
+  await prisma.menuOrder.deleteMany({
+    where: { customerId: user.id, orderId: null },
+  });
+
+  return res.json({ message: "Successfully deleted." });
+};
+
 export default {
   getMenus,
   addToCart,
@@ -105,4 +115,5 @@ export default {
   addMenu,
   deleteMenu,
   updateMenu,
+  clearCart,
 };
