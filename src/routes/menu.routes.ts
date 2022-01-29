@@ -32,6 +32,7 @@ router.post(
   body("composition").isObject(),
   addMenu
 );
+router.delete("/cart", loginRequired, controller.clearCart);
 router.delete("/:id", adminOnly, controller.deleteMenu);
 router.patch(
   "/:id",
@@ -46,6 +47,5 @@ router.patch(
   body("composition").isObject().optional(),
   controller.updateMenu
 );
-router.delete("/cart", loginRequired, controller.clearCart);
 
 export default router;
